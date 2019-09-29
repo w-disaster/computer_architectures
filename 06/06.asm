@@ -1,7 +1,7 @@
 SECTION .data
 array db 3,7,3,7,5
 lenght db 5
-parameter db '(1) dispari, (0) pari: %d',0Ah,0
+parameter db '(1) odd, (0) even: %d',0Ah,0
 
 
 SECTION .text

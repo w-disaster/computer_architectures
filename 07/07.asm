@@ -1,15 +1,15 @@
 SECTION .data
-array dd 3,7,3,7,5,1,4,-3,-7,-9,2,6
-lenght dd 12
-parameter db "%d\n",0Ah,0
+array dd 1,10,30,2,55,3,4,-3,-7,-9,2,6
+length dd 12
+parameter db "%d",0Ah,0
 
 SECTION .text
 global main
 extern printf
 
 main: 
-	mov ecx, [lenght]		;Pos
-	dec ecx
+	mov ecx, [length]
+	dec ecx				;Pos= length -1
 
 body1:
 	xor eax, eax
@@ -20,12 +20,13 @@ body1:
 body2: 
 	dec edx
 	cmp edx, -1			;cmp I=-1
-	jne if1_neg
+	jl if1_neg
+	jg if1_neg
 	jmp if1_pos
 
 if1_neg:
 	cmp eax, DWORD[array+edx*4]
-	jbe if2_neg
+	jle if2_neg
 	jmp body2 
 
 if2_neg:
@@ -42,24 +43,23 @@ if1_pos:
 	pop edx
 
 	cmp ecx, 0
-	jbe print_stdout
+	je print_stdout
 	jmp body1
 
 print_stdout:
-	mov eax,0
+	xor edi, edi
 	
 print_array:
-	mov ebx, DWORD[array+eax*4]
+	mov ebx, DWORD[array+edi*4]
 	push ebx
-	push DWORD parameter			;push parameter address
+	push parameter			;push parameter address
 	call printf
 	add esp, 8
-	ret
 	
 	
-	inc eax
-	cmp eax, DWORD[lenght]
-	jmp print_array 
+	inc edi
+	cmp edi, DWORD[length]
+	jb print_array 
 	
 	mov ebx, 0
 	mov eax, 1
